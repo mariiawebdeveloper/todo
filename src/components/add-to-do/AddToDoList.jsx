@@ -11,7 +11,8 @@ function AddToDoList({todo, setTodo}) {
             [...todo, {
                 id: uuid.v4(),
                 title: value,
-                status: true
+                status: true,
+                order: todo.length
             }]
         )
         setValue('')

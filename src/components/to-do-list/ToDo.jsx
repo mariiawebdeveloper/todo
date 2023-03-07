@@ -1,9 +1,46 @@
 import React, {useState} from 'react';
 import '../../App.css'
 
-function ToDo({todo, setTodo}) {
+function ToDo({todo, setTodo, currentCard, setCurrentCard}) {
     const [edit, setEdit] = useState(null)
     const [value, setValue] = useState('')
+
+
+    function dragStartHandler(e, item) {
+        console.log('drag', item)
+        setCurrentCard(item)
+    }
+
+    function dragEndHandler(e) {
+
+
+    }
+
+    function dragOverHandler(e) {
+        e.preventDefault()
+
+    }
+
+    function dropHandler(e, item) {
+        e.preventDefault()
+        console.log('drop', item)
+        setTodo(todo.map(c => {
+            if (c.id === item.id) {
+                return {...c, order: currentCard.order}
+            } else if (c.id === currentCard.id) {
+                return {...c, order: item.order}
+            }
+            return c
+        }))
+    }
+
+    const sortCards = (a, b) => {
+        if (a.order > b.order) {
+            return 1
+        } else {
+            return -1
+        }
+    }
 
     function deleteTodo(id) {
         let newTodo = [...todo].filter(item => item.id !== id)
@@ -38,16 +75,34 @@ function ToDo({todo, setTodo}) {
         })
         setTodo(newTodo)
         setEdit(null)
+        console.log(todo)
     }
 
     console.log(todo)
 
+    function changePlaces() {
+        console.log('CHANGE PLACES')
+        const editTodo = todo
+        const element = editTodo.shift()
+        editTodo.push(element)
+        console.log("editTodo", editTodo)
+        setCurrentCard(editTodo)
+        console.log('setCurrenttodo', currentCard)
+        return currentCard
+    }
+
     return (
         <div>{
-            todo.map(item => (
+            todo.sort(sortCards).map(item => (
 
-                        <div className={item.status === true ? 'item-active' : 'item-closed'} key={item.id}>
-                            <div className='item-location'>{
+                    <div draggable={true}
+                         onDragStart={(e) => dragStartHandler(e, item)}
+                         onDragLeave={(e) => dragEndHandler(e)}
+                         onDragEnd={(e) => dragEndHandler(e)}
+                         onDragOver={(e) => dragOverHandler(e)}
+                         onDrop={(e) => dropHandler(e, item)}
+                         className={item.status === true ? 'item-active' : 'item-closed'} key={item.id}>
+                        <div className='item-location'>{
                             edit === item.id ?
                                 <div>
                                     <input value={value} onChange={(e) => setValue(e.target.value)}/>
@@ -71,7 +126,9 @@ function ToDo({todo, setTodo}) {
                     </div>
                 )
             )
-        }</div>
+        }
+            <button onClick={changePlaces}>CHANGE PLACES</button>
+        </div>
     );
 }
 
