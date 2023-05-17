@@ -2,8 +2,7 @@ import './App.css';
 import Header from "./components/header/Header";
 import AddToDoList from "./components/add-to-do/AddToDoList";
 import ToDo from "./components/to-do-list/ToDo";
-import {useState, useEffect} from "react";
-import Slider from "./components/slider/Slider";
+import {useState} from "react";
 import Test from "./components/Test";
 
 
@@ -42,8 +41,6 @@ function App() {
                     <ToDo todo={todo} setTodo={setTodo} currentCard={currentCard} setCurrentCard={setCurrentCard}/>
                 </div>
 
-                <Test/>
-                {/*<Slider/>*/}
             </div>
 
         </div>

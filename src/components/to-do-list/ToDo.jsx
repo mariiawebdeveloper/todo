@@ -5,9 +5,7 @@ function ToDo({todo, setTodo, currentCard, setCurrentCard}) {
     const [edit, setEdit] = useState(null)
     const [value, setValue] = useState('')
 
-
     function dragStartHandler(e, item) {
-        console.log('drag', item)
         setCurrentCard(item)
     }
 
@@ -23,19 +21,19 @@ function ToDo({todo, setTodo, currentCard, setCurrentCard}) {
 
     function dropHandler(e, item) {
         e.preventDefault()
-        console.log('drop', item)
-        setTodo(todo.map(c => {
-            if (c.id === item.id) {
-                return {...c, order: currentCard.order}
-            } else if (c.id === currentCard.id) {
-                return {...c, order: item.order}
+        setTodo(todo.map(card => {
+            if (card.id === item.id) {
+                return {...card, order: currentCard.order}
+            } else if (card.id === currentCard.id) {
+                return {...card, order: item.order}
             }
-            return c
+            return card
         }))
     }
-
-    const sortCards = (a, b) => {
-        if (a.order > b.order) {
+/**
+ * sort cards*/
+    const sortCards = (itemA, itemB) => {
+        if (itemA.order > itemB.order) {
             return 1
         } else {
             return -1
@@ -75,21 +73,9 @@ function ToDo({todo, setTodo, currentCard, setCurrentCard}) {
         })
         setTodo(newTodo)
         setEdit(null)
-        console.log(todo)
     }
 
-    console.log(todo)
 
-    function changePlaces() {
-        console.log('CHANGE PLACES')
-        const editTodo = todo
-        const element = editTodo.shift()
-        editTodo.push(element)
-        console.log("editTodo", editTodo)
-        setCurrentCard(editTodo)
-        console.log('setCurrenttodo', currentCard)
-        return currentCard
-    }
 
     return (
         <div>{
@@ -127,7 +113,6 @@ function ToDo({todo, setTodo, currentCard, setCurrentCard}) {
                 )
             )
         }
-            <button onClick={changePlaces}>CHANGE PLACES</button>
         </div>
     );
 }
